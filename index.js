@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
-const generateSvgContent = require("./shapes.js");
+const generateSvgContent = require("./lib/shapes");
 
 // Prompt user for input using Inquirer
 function promptUser() {
@@ -30,4 +30,30 @@ function promptUser() {
     ]);
   }
 
-  // Need to create function to Generate logo svg file
+  // Generate the logo SVG file
+function generateLogo() {
+    promptUser()
+      .then((answers) => {
+        const { text, textColor, shapeType, shapeColor } = answers;
+  
+        const svgContent = generateSvgContent(text, textColor, shapeType, shapeColor);
+  
+        if (svgContent) {
+          fs.writeFile("logo.svg", svgContent, (err) => {
+            if (err) {
+              console.log("An error occurred while writing the SVG file.");
+              console.error(err);
+            } else {
+              console.log("Generated logo.svg");
+            }
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("An error occurred while generating the logo.");
+        console.error(err);
+      });
+  }
+  
+  // Run the logo generation
+  generateLogo();
